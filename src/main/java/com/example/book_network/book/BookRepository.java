@@ -21,4 +21,12 @@ public interface BookRepository extends JpaRepository<Book, Integer> , JpaSpecif
     Page<Book> findAllDisplayableBooks(Pageable pageable, Integer userId);
 
 
+    @Query("""
+        SELECT (COUNT(*) > 0) as isBorrowed
+        From BookTransactionHistory bookTransactionHistory
+        Where bookTransactionHistory.user.id = :userId
+        and bookTransactionHistory.book.id = :bookId
+        and bookTransactionHistory.returnApproved = false
+""")
+    boolean isAlreadyBorrowedByUser(Integer bookId, Integer userId);
 }
