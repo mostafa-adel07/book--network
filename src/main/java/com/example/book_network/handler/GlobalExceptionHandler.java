@@ -1,4 +1,4 @@
-package com.example.book_network.jandler;
+package com.example.book_network.handler;
 
 import jakarta.mail.MessagingException;
 import org.springframework.http.HttpStatus;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.example.book_network.jandler.BusinessErrorCodes.*;
+import static com.example.book_network.handler.BusinessErrorCodes.*;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {

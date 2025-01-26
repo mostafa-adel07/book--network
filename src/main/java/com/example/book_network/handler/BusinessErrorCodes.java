@@ -1,4 +1,4 @@
-package com.example.book_network.jandler;
+package com.example.book_network.handler;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
