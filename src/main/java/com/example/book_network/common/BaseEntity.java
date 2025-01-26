@@ -26,7 +26,6 @@ public class BaseEntity {
     @Id
     @GeneratedValue
     private Integer id;
-
     @CreatedDate
     @Column(updatable = false, nullable = false)
     private LocalDateTime createdDate;

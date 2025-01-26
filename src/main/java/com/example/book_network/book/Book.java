@@ -22,7 +22,7 @@ import java.util.List;
 public class Book extends BaseEntity {
 
     private String title;
-    private String author;
+    private String authorName;
     private String isbn;
     private String synopsis;
     private String bookCover;
@@ -38,4 +38,22 @@ public class Book extends BaseEntity {
 
     @OneToMany(mappedBy = "book")
     private List<BookTransactionHistory> histories;
+
+
+
+
+    @Transient
+    public double getRate(){
+        if(feedbacks == null || feedbacks.isEmpty()){
+            return 0.0;
+        }
+        var rate = this.feedbacks.stream()
+                .mapToDouble(Feedback::getNote)
+                .average()
+                .orElse(0.0);
+
+        double roundedRate = Math.round(rate * 10.0) / 10.0;
+        return roundedRate;
+
+    }
 }

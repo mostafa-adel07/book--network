@@ -1,5 +1,6 @@
 package com.example.book_network.handler;
 
+import com.example.book_network.book.exception.OperationNotPremittedException;
 import jakarta.mail.MessagingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,8 @@ public class GlobalExceptionHandler {
                                 .businessErrorCode(ACCOUNT_LOCKED.getCode())
                                 .businessErrorDescription(ACCOUNT_LOCKED.getDescription())
                                 .error(exp.getMessage())
-                                .build());
+                                .build()
+                );
     }
 
 
@@ -39,7 +41,8 @@ public class GlobalExceptionHandler {
                                 .businessErrorCode(ACCOUNT_DISABLED.getCode())
                                 .businessErrorDescription(ACCOUNT_DISABLED.getDescription())
                                 .error(exp.getMessage())
-                                .build());
+                                .build()
+                );
     }
 
 
@@ -52,7 +55,8 @@ public class GlobalExceptionHandler {
                                 .businessErrorCode(BAD_CREDENTIALS.getCode())
                                 .businessErrorDescription(BAD_CREDENTIALS.getDescription())
                                 .error(BAD_CREDENTIALS.getDescription())
-                                .build());
+                                .build()
+                );
     }
 
     @ExceptionHandler(MessagingException.class)
@@ -62,7 +66,8 @@ public class GlobalExceptionHandler {
                 .body(
                         ExceptionResponse.builder()
                                 .error(exp.getMessage())
-                                .build());
+                                .build()
+                );
     }
 
 
@@ -72,7 +77,8 @@ public class GlobalExceptionHandler {
        exp.getBindingResult().getAllErrors().forEach(error -> {
            var errorMessage = error.getDefaultMessage();
            errors.add(errorMessage);
-       });
+       }
+       );
 
 
 
@@ -81,7 +87,8 @@ public class GlobalExceptionHandler {
                 .body(
                         ExceptionResponse.builder()
                                 .validationError(errors)
-                                .build());
+                                .build()
+                );
     }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(Exception exp){
@@ -93,11 +100,21 @@ public class GlobalExceptionHandler {
                         ExceptionResponse.builder()
                                 .businessErrorDescription("Internal Error, contact the admin")
                                 .error(exp.getMessage())
-                                .build());
+                                .build()
+                );
     }
 
 
-
+    @ExceptionHandler(OperationNotPremittedException.class)
+    public ResponseEntity<ExceptionResponse> handleException(OperationNotPremittedException exp){
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(
+                        ExceptionResponse.builder()
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
 
 
 
