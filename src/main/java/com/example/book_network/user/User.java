@@ -1,5 +1,7 @@
 package com.example.book_network.user;
 
+import com.example.book_network.book.Book;
+import com.example.book_network.history.BookTransactionHistory;
 import com.example.book_network.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -43,6 +45,11 @@ public class User implements UserDetails, Principal {
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
 
+    @OneToMany(mappedBy = "owner")
+    private List<Book> books;
+
+    @OneToMany(mappedBy = "user")
+    private List<BookTransactionHistory> histories;
 
 
     @CreatedDate
