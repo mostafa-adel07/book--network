@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
@@ -25,7 +26,7 @@ public class BookService {
     private final BookMapper bookMapper;
     private final BookRepository bookRepository;
     private final BookTransactionHistoryRepository bookTransactionHistoryRepository;
-
+    private final FileStorageService fileStorageService;
     @Transactional
     public BookResponse save(@Valid BookRequest request, Authentication connectedUser) {
         User user = (User) connectedUser.getPrincipal();
@@ -229,5 +230,16 @@ public class BookService {
         bookTransactionHistory.setReturnApproved(true);
         return bookTransactionHistoryRepository.save(bookTransactionHistory).getId();
 
+    }
+
+    public void uploadBookCoverPicture(MultipartFile file, Authentication connectedUser, Integer bookId) {
+
+        Book book= bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("No book found with the id: " + bookId));
+
+        User user = (User) connectedUser.getPrincipal();
+        var bookCover = fileStorageService.saveFile(file, user.getId());
+        book.setBookCover((String) bookCover);
+        bookRepository.save(book);
     }
 }
